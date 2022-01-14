@@ -3,9 +3,14 @@
 
   outputs = { self, ... }: {
     templates = {
-      haskell-template = {
-        path = ./Haskell;
+      haskell-new-template = {
+        path = ./Haskell/HaskellNew;
         description = "Flake template for a general Haskell project";
+      };
+
+      haskell2flake-template = {
+        path = ./Haskell/Haskell2Flake;
+        description = "Add a flake.nix to an existing Haskell project";
       };
     };
   };
