@@ -17,12 +17,13 @@
 
           defaultPackage = self.packages.${system}.${packageName};
 
-          devShell = pkgs.mkShell {
-            buildInputs = with haskellPackages;
-              [ ghc
-                haskell-language-server
-                cabal-install
-              ];
+          devShell = haskellPackages.shellFor {
+            packages = p: [ self.defaultPackage.${system} ]; # This automatically pulls cabal libraries into the devshell, so they can be used in ghci
+
+            buildInputs = with haskellPackages; [ ghc
+                                                  haskell-language-server
+                                                  cabal-install ];
+
             inputsFrom = builtins.attrValues self.packages.${system};
           };
         }
