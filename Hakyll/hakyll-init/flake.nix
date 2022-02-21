@@ -10,7 +10,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         haskellPackages = pkgs.haskellPackages;
-        packageName = "my-site";
+        packageName = throw "Insert Project Name Here";
       in
         {
           packages.${packageName} = haskellPackages.callCabal2nix packageName self {};
@@ -27,4 +27,4 @@
           };
         }
     );
-}
+  }
