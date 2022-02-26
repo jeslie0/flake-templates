@@ -19,12 +19,17 @@
 
             devShell = haskellPackages.shellFor {
               packages = p: [ self.defaultPackage.${system} ]; # This automatically pulls cabal libraries into the devshell, so they can be used in ghci
-
               buildInputs = with haskellPackages; [ ghc
                                                     haskell-language-server
-                                                    cabal-install ];
-
+                                                    cabal-install
+                                                    apply-refact
+                                                    hlint
+                                                    stylish-haskell
+                                                    hasktags
+                                                    hindent
+                                                  ];
               inputsFrom = builtins.attrValues self.packages.${system};
+              withHoogle = true;
             };
           }
       );
