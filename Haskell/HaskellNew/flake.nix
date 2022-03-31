@@ -28,9 +28,13 @@
                                                     hasktags
                                                     hindent
                                                   ];
-              inputsFrom = builtins.attrValues self.packages.${system};
+
+              # This will build the cabal project and add it to the path. We probably don't want that to happen.
+              # inputsFrom = builtins.attrValues self.packages.${system};
+
+              # Enables Hoogle for the builtin packages.
               withHoogle = true;
             };
           }
       );
-}
+  }
