@@ -15,9 +15,9 @@
                  description = "A new Hakyll site, generated from hakyll-init";
                };
 
-      py-dev-shell = { path = ./Python/devshell;
-                       description = "A very basic python devshell flake";
-                     };
+      python = { path = ./Python;
+                 description = "A very basic Python project with a devshell";
+            };
 
       C = { path = ./C;
             description = "A very basic C project, with devshell";
