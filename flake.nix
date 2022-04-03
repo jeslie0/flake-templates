@@ -18,6 +18,10 @@
       py-dev-shell = { path = ./Python/devshell;
                        description = "A very basic python devshell flake";
                      };
+
+      C = { path = ./C;
+            description = "A very basic C project, with devshell";
+          };
     };
   };
 }
