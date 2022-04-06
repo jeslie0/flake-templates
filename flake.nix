@@ -22,6 +22,10 @@
       C = { path = ./C;
             description = "A very basic C project, with devshell";
           };
+
+      Csharp = { path = ./Csharp;
+                 description = "A very basic C# project, with devshell";
+               };
     };
   };
 }
