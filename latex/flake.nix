@@ -4,15 +4,15 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  inputs.james-fonts.url = "github:jeslie0/my-fonts-flake";
+  inputs.fonts.url = "github:jeslie0/fonts";
   inputs.texmf.url = "github:jeslie0/texmf";
 
-  outputs = { self, nixpkgs, flake-utils, james-fonts, texmf }:
+  outputs = { self, nixpkgs, flake-utils, fonts, texmf }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        myfonts = james-fonts.defaultPackage.${system};
+        myfonts = fonts.defaultPackage.${system};
         tex = pkgs.texlive.combine { # Put the packages that we want texlive to use when compiling the PDF in here.
           inherit (pkgs.texlive)
             # scheme-minimal
