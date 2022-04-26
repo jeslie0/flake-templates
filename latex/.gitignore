@@ -1,0 +1,12 @@
+*auto
+*main.aux
+*main.blg
+*main.bbl
+*main.out
+
+result*
+.direnv
+
+*.pdf
+*.log
+*.synctex.gz
