@@ -1,0 +1,14 @@
+*auto
+*main.aux
+*main.bcf
+*main.blg
+*main.bbl
+*main.run.xml
+*main.out
+
+result*
+.direnv
+
+*.pdf
+*.log
+*.synctex.gz
