@@ -56,6 +56,11 @@
           devShell = pkgs.mkShell {
             packages = with pkgs; [ texlab ];
             inputsFrom = [ self.packages.${system}.${packageName} ];
+            shellHook = ''
+                       TEXMFHOME=${texmf} \
+                       OSFONTDIR=${myfonts}/share/fonts \
+                       SOURCE_DATE_EPOCH=${toString self.lastModified}
+                        '';
 
           };
         }
