@@ -1,0 +1,4 @@
+#+title: Read Me
+#+author: James Leslie
+* What is this?
+This is my nix flake template flake. It provides templates for certain languages, setting up a nix flake for each of them. It also provides development shells.
