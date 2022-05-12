@@ -15,6 +15,10 @@
                  description = "A very basic C# project, with devshell";
                };
 
+      Elm-shell = { path = ./Elm;
+                    description = "A very basic Elm devshell";
+                  };
+
       hakyll = { path = ./Hakyll/hakyll-init;
                  description = "A new Hakyll site, generated from hakyll-init";
                };
