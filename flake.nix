@@ -31,6 +31,10 @@
                                  description = "Add a flake.nix to an existing Haskell project";
                                };
 
+      haskellStable = { path = ./Haskell/HaskellStable;
+                        description = "Flake template for a general Haskell project, using GHC 8.10.7";
+                      };
+
       latex = { path = ./latex;
                 description = "A very basic LaTeX project, with a devshell";
               };
