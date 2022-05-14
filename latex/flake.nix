@@ -13,6 +13,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         myfonts = fonts.defaultPackage.${system};
+        mytexmf = texmf.defaultPackage.${system};
         tex = pkgs.texlive.combine { # Put the packages that we want texlive to use when compiling the PDF in here.
           inherit (pkgs.texlive)
             # scheme-minimal
@@ -24,7 +25,7 @@
             fontspec
             latexmk;
         };
-        buildInputs = [ pkgs.coreutils tex myfonts texmf];
+        buildInputs = [ pkgs.coreutils tex myfonts mytexmf ];
         packageName = throw "EnterPackageName";
       in
         {
@@ -54,13 +55,15 @@
           defaultPackage = self.packages.${system}.${packageName};
 
           devShell = pkgs.mkShell {
-            packages = with pkgs; [ texlab ];
-            inputsFrom = [ self.packages.${system}.${packageName} ];
+            packages = with pkgs; [ texlab # A latex language server
+                                  ];
+            inputsFrom = [ self.packages.${system}.${packageName} # Include the inputs from our tex build
+                         ];
             shellHook = ''
-                       TEXMFHOME=${texmf} \
-                       OSFONTDIR=${myfonts}/share/fonts \
-                       SOURCE_DATE_EPOCH=${toString self.lastModified}
-                        '';
+                        export TEXMFHOME=${mytexmf} \
+                               OSFONTDIR=${myfonts}/share/fonts \
+                               SOURCE_DATE_EPOCH=${toString self.lastModified}
+                        ''; # Adds my texmf folder and fonts so that they can be used in the devshell. Also sets the date to the last commit of the repository.
 
           };
         }
