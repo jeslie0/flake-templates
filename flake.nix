@@ -3,6 +3,10 @@
 
   outputs = { self, ... }: {
     templates = {
+      basic = { path = ./basic;
+                description = "A very basic flake template.";
+              };
+
       C = { path = ./C;
             description = "A very basic C project, with devshell";
           };
