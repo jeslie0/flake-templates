@@ -39,6 +39,10 @@
                         description = "Flake template for a general Haskell project, using GHC 8.10.7";
                       };
 
+      javascript = { path = ./javascript;
+                     description = "A basic javascript development shell";
+                   };
+
       latex = { path = ./latex;
                 description = "A very basic LaTeX project, with a devshell";
               };
