@@ -11,9 +11,15 @@
       in
         {
 
-        packages.hello = pkgs.hello;
+          packages.hello = pkgs.hello;
 
-        defaultPackage = self.packages.${system}.hello;
+          defaultPackage = self.packages.${system}.hello;
+
+          devShell = pkgs.mkShell {
+            inputsFrom = [ ]; # Include build inputs from packages in
+            # this list
+            buildInputs = [ ]; # Extra packages to go in the shell
+          };
       }
     );
 
