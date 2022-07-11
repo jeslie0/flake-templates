@@ -23,7 +23,7 @@
                     description = "A very basic Elm devshell";
                   };
 
-      hakyll = { path = ./Hakyll/hakyll-init;
+      hakyll = { path = ./Hakyll;
                  description = "A new Hakyll site, generated from hakyll-init";
                };
 
