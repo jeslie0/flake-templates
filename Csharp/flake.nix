@@ -51,7 +51,11 @@
 
           devShell = pkgs.mkShell {
             buildInputs = with pkgs;
-              dependencies ++ [ omnisharp-roslyn ];
+              dependencies ++ [
+                omnisharp-roslyn
+                msbuild
+                dotnet-sdk
+              ];
           };
         }
     );
