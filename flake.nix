@@ -3,53 +3,70 @@
 
   outputs = { self, ... }: {
     templates = {
-      basic = { path = ./basic;
-                description = "A very basic flake template.";
-              };
+      basic = {
+        path = ./basic;
+        description = "A very basic flake template.";
+      };
 
-      C = { path = ./C;
-            description = "A very basic C project, with devshell";
-          };
+      c = {
+        path = ./C;
+        description = "A very basic C project, with devshell.";
+      };
 
-      Cpp = { path = ./Cpp;
-              description = "A very basic C++ project, with devshell";
-            };
+      cpp-basic = {
+        path = ./Cpp/basic;
+        description = "A very basic C++ project, with devshell.";
+      };
 
-      Csharp = { path = ./Csharp;
-                 description = "A very basic C# project, with devshell";
-               };
+      cpp-cmake = {
+        path = ./Cpp/CMake;
+        description = "A very basic C++ project using CMake, with a devshell.";
+      };
 
-      Elm-shell = { path = ./Elm;
-                    description = "A very basic Elm devshell";
-                  };
+      csharp = {
+        path = ./Csharp;
+        description = "A very basic C# project, with devshell.";
+      };
 
-      hakyll = { path = ./Hakyll;
-                 description = "A new Hakyll site, generated from hakyll-init";
-               };
+      elm-shell = {
+        path = ./Elm;
+        description = "A very basic Elm devshell.";
+      };
 
-      haskell-new-template = { path = ./Haskell/HaskellNew;
-                               description = "Flake template for a general Haskell project";
-                             };
+      hakyll = {
+        path = ./Hakyll;
+        description = "A new Hakyll site, generated from hakyll-init.";
+      };
 
-      haskell2flake-template = { path = ./Haskell/Haskell2Flake;
-                                 description = "Add a flake.nix to an existing Haskell project";
-                               };
+      haskell = {
+        path = ./Haskell/Haskell;
+        description = "Flake template for a general Haskell and Cabal project.";
+      };
 
-      haskellStable = { path = ./Haskell/HaskellStable;
-                        description = "Flake template for a general Haskell project, using GHC 8.10.7";
-                      };
+      haskell2flake = {
+        path = ./Haskell/Haskell2Flake;
+        description = "Add a flake.nix to an existing Haskell project.";
+      };
 
-      javascript = { path = ./javascript;
-                     description = "A basic javascript development shell";
-                   };
+      haskell8-10-7 = {
+        path = ./Haskell/Haskell8-10-7;
+        description = "Flake template for a general Haskell project, using GHC 8.10.7.";
+      };
 
-      latex = { path = ./latex;
-                description = "A very basic LaTeX project, with a devshell";
-              };
+      javascript = {
+        path = ./Javascript/basic;
+        description = "A basic javascript development shell.";
+      };
 
-      python = { path = ./Python;
-                 description = "A very basic Python project, with a devshell";
-               };
+      latex = {
+        path = ./LaTeX;
+        description = "A very basic LaTeX project, with a devshell.";
+      };
+
+      python = {
+        path = ./Python;
+        description = "A very basic Python project, with a devshell.";
+      };
 
     };
   };

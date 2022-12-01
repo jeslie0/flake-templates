@@ -22,7 +22,6 @@
 
           defaultPackage = self.packages.${system}.${packageName};
 
-
           devShell = haskellPackages.shellFor {
             packages = p: [ self.defaultPackage.${system} ]; # This automatically pulls cabal libraries into the devshell, so they can be used in ghci
             buildInputs = with haskellPackages;
