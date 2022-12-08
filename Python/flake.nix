@@ -34,8 +34,9 @@
 
             devShell = pkgs.mkShell {
               buildInputs = with pkgs;
-                [ python-language-server
-                  customPython ];
+                [ python310Packages.python-lsp-server
+                  customPython
+                ];
             };
           }
       );
