@@ -13,9 +13,9 @@
       let pkgs = nixpkgs.legacyPackages.${system};
           haskellPackages = pkgs.haskellPackages;
           packageName = with builtins;
-            let cabalFileName = head (filter (name:
-                  let len = builtins.stringLength name;
-                  in len >= 6 && (substring (len - 6) 6 name == ".cabal")) (attrNames (readDir ./.)));
+            let cabalFileName = head (filter
+              (name: pkgs.lib.hasSuffix ".cabal" name)
+              (attrNames (readDir ./.)));
             in head (match "^.*name\:\ *([^[:space:]]*).*$" (readFile "${./.}\/${cabalFileName}"));
       in
         {
