@@ -1,4 +1,6 @@
 {
+    "name": "ELM-PACKAGE",
+    "version": "v0.1.0",
     "type": "application",
     "source-directories": [
         "src"

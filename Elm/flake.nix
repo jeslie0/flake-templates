@@ -1,29 +1,31 @@
 {
-  description = "My Elm Project";
+  description = "Basic elm flake with dev shell.";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
+    flake-utils.url = github:numtide/flake-utils;
+    mkElmDerivation.url = github:jeslie0/mkElmDerivation;
+  };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, mkElmDerivation, flake-utils }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         elmPackages = pkgs.elmPackages;
-        packageName = throw "Enter Package Name Here";
       in
         {
-          packages.${packageName} = (import ./default.nix) { nixpkgs = pkgs; config = {}; };
-
-          defaultPackage = self.packages.${system}.${packageName};
+          packages.default = mkElmDerivation.mkElmDerivation {
+            src = ./.;
+            nixpkgs = pkgs;
+          };
 
           devShell = pkgs.mkShell {
             packages = with pkgs; with pkgs.elmPackages;
               [ elm-language-server
                 elm-format
-                elm2nix
               ];
-            inputsFrom = [ self.packages.${system}.${packageName} ];
+            inputsFrom = [ self.packages.${system}.default ];
           };
         }
     );
