@@ -2,8 +2,8 @@
   description = "My Haskell project";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
+    flake-utils.url = github:numtide/flake-utils;
   };
 
   outputs = { self, nixpkgs, flake-utils }:
@@ -21,16 +21,14 @@
           defaultPackage = self.packages.${system}.${packageName};
 
           devShell = haskellPackages.shellFor {
-            packages = p: [ self.defaultPackage.${system} ]; # This automatically pulls cabal libraries into the devshell, so they can be used in ghci
+
+            # The packages that the shell is for.
+            packages = [ self.defaultPackage.${system} ];
+
+            #
             buildInputs = with haskellPackages;
-              [ ghc
-                haskell-language-server
+              [ haskell-language-server
                 cabal-install
-                apply-refact
-                hlint
-                stylish-haskell
-                hasktags
-                hindent
               ];
 
             # Add build inputs of the following derivations.

@@ -2,9 +2,9 @@
   description = "My Haskell project";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11"; # This is to get ghc version 8.10.7, which HLS works well with.
-    nixpkgsUNSTABLE.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = github:nixos/nixpkgs/nixos-21.11; # This is to get ghc version 8.10.7, which HLS works well with.
+    nixpkgsUNSTABLE.url = github:nixos/nixpkgs/nixos-unstable;
+    flake-utils.url = github:numtide/flake-utils;
   };
 
   outputs = { self, nixpkgs, nixpkgsUNSTABLE, flake-utils }:
@@ -28,11 +28,6 @@
             buildInputs = with haskellPackages;
               [ nixpkgsUNSTABLE.legacyPackages.${system}.haskell-language-server
                 cabal-install
-                apply-refact
-                hlint
-                stylish-haskell
-                hasktags
-                hindent
               ];
 
             # Add build inputs of the following derivations.

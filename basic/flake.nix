@@ -1,8 +1,10 @@
 {
   description = "A very basic flake";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
+    flake-utils.url = github:numtide/flake-utils;
+  };
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (
@@ -18,7 +20,7 @@
           devShell = pkgs.mkShell {
             inputsFrom = [ ]; # Include build inputs from packages in
             # this list
-            buildInputs = [ ]; # Extra packages to go in the shell
+            packages = [ ]; # Extra packages to go in the shell
           };
       }
     );

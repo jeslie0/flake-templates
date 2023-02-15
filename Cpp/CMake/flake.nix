@@ -2,8 +2,8 @@
   description = "A very basic C++ flake template, using CMake, providing a devshell.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
+    flake-utils.url = github:numtide/flake-utils;
   };
 
   outputs = { self, nixpkgs, flake-utils }:
@@ -39,7 +39,7 @@
           devShell = pkgs.mkShell {
             inputsFrom = [ self.packages.${system}.${packageName}
                          ];
-            buildInputs = with pkgs;
+            packages = with pkgs;
               [ clang-tools
                 cmake
               ];
