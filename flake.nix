@@ -63,6 +63,11 @@
         description = "A very basic LaTeX project, with a devshell.";
       };
 
+      purescript = {
+        path = ./PureScript/;
+        description = "A very basic PureScript dev-shell"
+      }
+
       python = {
         path = ./Python;
         description = "A very basic Python project, with a devshell.";
