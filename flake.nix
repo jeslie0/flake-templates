@@ -65,8 +65,8 @@
 
       purescript = {
         path = ./PureScript;
-        description = "A very basic PureScript dev-shell"
-      }
+        description = "A very basic PureScript dev-shell";
+      };
 
       python = {
         path = ./Python;
