@@ -64,7 +64,7 @@
       };
 
       purescript = {
-        path = ./PureScript/;
+        path = ./PureScript;
         description = "A very basic PureScript dev-shell"
       }
 
