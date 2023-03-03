@@ -16,6 +16,8 @@
       in
         {
           packages.default = mkElmDerivation.mkElmDerivation {
+            pname = throw "Enter package name";
+            version = "0.1.0";
             src = ./.;
             nixpkgs = pkgs;
           };
@@ -24,6 +26,7 @@
             packages = with pkgs; with pkgs.elmPackages;
               [ elm-language-server
                 elm-format
+                elm-live
               ];
             inputsFrom = [ self.packages.${system}.default ];
           };
