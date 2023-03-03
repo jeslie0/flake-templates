@@ -22,6 +22,8 @@
           # this list
           packages = with pkgs;
             [ nodePackages.purescript-language-server
+              nodePackages.live-server
+              esbuild
               purescript
               spago
               nodejs
