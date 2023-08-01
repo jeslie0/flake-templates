@@ -23,6 +23,11 @@
         description = "A very basic C++ project using CMake, with a devshell.";
       };
 
+      cpp-wasm = {
+        path = ./Cpp/wasm;
+        description = "A very basic C++ project using CMake, with a devshell.";
+      };
+
       csharp = {
         path = ./Csharp;
         description = "A very basic C# project, with devshell.";

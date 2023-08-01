@@ -1,0 +1,9 @@
+#+title: ReadMe
+This repo gives examples of how to use CMake and Nix to add libraries.
+- It has a local library called =adder=, which lives in the =/lib= folder;
+- It imports =nlohmann/json= through FetchContent or Nix (using nixpkgs);
+- It imports =fmtlib/fmt= through FetchContent or Nix (not using nixpkgs);
+
+If the library is on nixpkgs, one just needs to add it as a dependency to the Nix derivation. If you want to use a library not from nixpkgs, one needs to download that library using a fetcher of some sort, then copy it into the right place for CMake to use it. This means you are using Nix to download the library, then making CMake treat it as a local (or embedded) library.
+
+I think it is a good idea to use some CMake variables to determine if one is using FetchContent or not. This project uses the command line variable =USE_LOCAL_PACKAGES= with a little bit of logic about what to do in either case. If it is true, then we assume Nix has put the libraries in the right place before the cmake command is run. Otherwise, FetchContent is called and CMake handles the dependencies.
