@@ -2,24 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Wasm Html template</title>
+    <title>Calculator Test</title>
   </head>
   <body>
-    <button id="mybutton">Run myFunction</button>
-    <script defer type="text/javascript" src="hello.js"></script>
-<script>
-  const myFunction = Module.cwrap("myFunction", "number", ["number"]);
-  console.log("myFunction(8)", myFunction(8))
+    <button id="myButton">Run myFunction</button>
+    <script>
+      let factorial;
+      let main;
+      WebAssembly.instantiateStreaming(
+        fetch('PROJECT_NAME.wasm'),
+      ).then(result => {
+        factorial = result.instance.exports.myFunction;
+        main = result.instance.exports.main;
+      });
 
-
- document.getElementById("mybutton").addEventListener("click", () => {
-     const result = (foo) => Module.ccall(
-    "myFunction", // name of C functio
-    "number", // return type
-    ["number"], // argument types
-    [foo], // arguments
-  );
- });
+      document.getElementById("myButton").addEventListener("click", () => {console.log(factorial(10))})
     </script>
   </body>
 </html>

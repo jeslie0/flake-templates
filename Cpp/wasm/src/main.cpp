@@ -10,13 +10,9 @@
 #define EXTERN
 #endif
 
-#include <iostream>
-#include <memory>
 
 EMSCRIPTEN_KEEPALIVE int main()
 {
-    std::cout << "Hello, World"
-              << "\n";
     return 0;
 }
 
