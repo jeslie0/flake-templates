@@ -1,0 +1,14 @@
+Diagnostics:
+  UnusedIncludes: Strict
+  ClangTidy:
+    Add: ['bugprone*', 'clang*', 'concurrency*', 'cppcoreguidelines*', 'modernize*', 'misc-non-private-member-variables-in-classes', 'performance*', 'readability*', 'llvm-header-guard']
+    Remove: ['cppcoreguidelines-avoid-magic-numbers', 'readability-magic-numbers']
+
+InlayHints:
+  Designators: Yes
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
+
+CompileFlags:
+  Add: [-fsanitize=address, -fsanitize=undefined, -Wall]

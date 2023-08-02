@@ -51,7 +51,6 @@
                          ];
             packages = with pkgs;
               [ clang-tools
-                cmake
               ];
           };
         }

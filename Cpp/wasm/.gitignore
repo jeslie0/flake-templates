@@ -1,3 +1,7 @@
 build
 result
 .cache
+.emscriptencache
+.direnv
+.envrc
+compile_commands.json
