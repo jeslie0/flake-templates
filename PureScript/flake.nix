@@ -1,52 +1,49 @@
 {
-  description = "A development shell for a PureScript project.";
+  description = "A flake for building PureScript projects.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    spago2nix.url = "github:justinwoo/spago2nix";
-    purifix.url = "github:purifix/purifix";
     ps-overlay.url = "github:thomashoneyman/purescript-overlay";
-    easy-purescript-nix.url = "github:justinwoo/easy-purescript-nix";
+    mkSpagoDerivation.url = "github:jeslie0/mkSpagoDerivation";
+    easy-purescript-nix = {
+      url = "github:justinwoo/easy-purescript-nix";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, spago2nix, purifix, ps-overlay, easy-purescript-nix }:
+  outputs = { self, nixpkgs, flake-utils, ps-overlay, mkSpagoDerivation, easy-purescript-nix }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ purifix.overlay ps-overlay.overlays.default ];
+          overlays = [ ps-overlay.overlays.default
+                       mkSpagoDerivation.overlays.default
+                     ];
         };
         easy-ps = easy-purescript-nix.packages.${system};
         dependencies = with pkgs;
-          [ easy-ps.purescript
+          [ easy-ps.purs
             spago-unstable
-            # easy-ps.spago
-            easy-ps.purs-backend-es
-            easy-ps.psa
-            easy-ps.zephyr
+            purs-backend-es
             esbuild
-            watchexec
           ];
-        purifx = pkgs.purifix.override {
-          buildInputs = [ easy-ps.purs-backend-es pkgs.esbuild ];
-        };
       in
         {
-          packages.default = pkgs.purifix {
+          packages.default = pkgs.mkSpagoDerivation {
+            version = "0.1.0";
             src = ./.;
-          }.overrideAttrs {
-            buildInputs = [easy-ps.purs-backend-es];
           };
-          devShell = pkgs.mkShell {
-            # inputsFrom = [ ]; # Include build inputs from packages in
-            # this list
-            packages = with pkgs;
-              [ easy-ps.purescript-language-server
-                easy-ps.purs-tidy
-                nodePackages.live-server
-              ] ++ dependencies; # Extra packages to go in the shell
+
+            devShell = pkgs.mkShell {
+              inputsFrom = [  ]; # Include build inputs from packages in
+              # this list
+              packages = with pkgs;
+                [ purescript-language-server
+                  watchexec
+                  purs-tidy
+                  nodePackages.live-server
+                ] ++ dependencies; # Extra packages to go in the shell
           };
         }
     );
