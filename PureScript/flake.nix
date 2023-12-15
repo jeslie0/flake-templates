@@ -35,15 +35,17 @@
             src = ./.;
           };
 
-            devShell = pkgs.mkShell {
-              inputsFrom = [  ]; # Include build inputs from packages in
-              # this list
-              packages = with pkgs;
-                [ purescript-language-server
-                  watchexec
-                  purs-tidy
-                  nodePackages.live-server
-                ] ++ dependencies; # Extra packages to go in the shell
+          devShell = pkgs.mkShell {
+            inputsFrom = [
+              # self.packages.${system}.default
+            ]; # Include build inputs from packages in
+            # this list
+            packages = with pkgs;
+              [ purescript-language-server
+                watchexec
+                purs-tidy
+                nodePackages.live-server
+              ] ++ dependencies; # Extra packages to go in the shell
           };
         }
     );
