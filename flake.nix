@@ -53,11 +53,6 @@
         description = "Add a flake.nix to an existing Haskell project.";
       };
 
-      haskell8-10-7 = {
-        path = ./Haskell/Haskell8-10-7;
-        description = "Flake template for a general Haskell project, using GHC 8.10.7.";
-      };
-
       javascript = {
         path = ./Javascript/basic;
         description = "A basic javascript development shell.";
@@ -77,7 +72,6 @@
         path = ./Python;
         description = "A very basic Python project, with a devshell.";
       };
-
     };
   };
 }
