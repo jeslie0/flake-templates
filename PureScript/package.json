@@ -1,0 +1,14 @@
+{
+  "name": "purescript-nix-dev-template",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "concurrently \"npm:spago-build\" \"npm:dev-server\"",
+    "spago-build": "watch-exec -w src -c \"spago build\"",
+    "dev-server": "parcel serve public/dev.html"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "parcel": "^2.11.0",
+    "watch-exec": "^1.2.2"
+  }
+}
