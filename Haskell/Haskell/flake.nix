@@ -2,41 +2,76 @@
   description = "My Haskell project";
 
   inputs = {
-    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
-    flake-utils.url = github:numtide/flake-utils;
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-          haskellPackages = pkgs.haskellPackages;
-          packageName = with builtins;
-            let cabalFileName = head ((filter (pkgs.lib.hasSuffix ".cabal")) (attrNames (readDir ./.)));
-            in head (match "^.*name\:\ *([^[:space:]]*).*$" (readFile "${./.}\/${cabalFileName}"));
+  outputs = { self, nixpkgs }:
+    let
+      supportedSystems =
+        [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
+
+      forAllSystems =
+        nixpkgs.lib.genAttrs supportedSystems;
+
+      nixpkgsFor = forAllSystems (system:
+        import nixpkgs {
+          inherit system;
+        });
+
+      haskellPackages = system:
+        nixpkgsFor.${system}.haskellPackages;
+
+      packageName = system: with builtins;
+        let
+          cabalFileName =
+            let
+              cabalFiles =
+                ((filter ((nixpkgsFor.${system}).lib.hasSuffix ".cabal")) (attrNames (readDir ./.)));
+            in
+              head cabalFiles;
+
+          matches =
+            (match "^.*name\:\ *([^[:space:]]*).*$" (readFile "${./.}\/${cabalFileName}"));
+        in
+          head matches;
       in
         {
-          packages.${packageName} = haskellPackages.callCabal2nix packageName self {};
+          packages =
+            forAllSystems (system:
+              let
+                pkgs =
+                  nixpkgsFor.${system};
+              in
+                {
+                  default =
+                    (haskellPackages system).callCabal2nix (packageName system) self {};
+                }
+            );
 
-          defaultPackage = self.packages.${system}.${packageName};
 
-          devShell = haskellPackages.shellFor {
+          devShell =
+            forAllSystems (system:
+              let
+                pkgs =
+                  nixpkgsFor.${system};
+              in
+                (haskellPackages system).shellFor {
+                  # The packages that the shell is for.
+                  packages = p: [
+                    # self.package.${system}.default
+                  ];
 
-            # The packages that the shell is for.
-            packages = [ self.defaultPackage.${system} ];
+                  buildInputs = with (haskellPackages system);
+                    [ haskell-language-server
+                      cabal-install
+                    ];
 
-            #
-            buildInputs = with haskellPackages;
-              [ haskell-language-server
-                cabal-install
-              ];
+                  # Add build inputs of the following derivations.
+                  inputsFrom = [ ];
 
-            # Add build inputs of the following derivations.
-            inputsFrom = [ ];
-
-            # Enables Hoogle for the builtin packages.
-            withHoogle = true;
-          };
-        }
-    );
+                  # Enables Hoogle for the builtin packages.
+                  # withHoogle = true;
+                }
+            );
+        };
 }
