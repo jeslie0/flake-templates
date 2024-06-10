@@ -58,7 +58,7 @@
                 (haskellPackages system).shellFor {
                   # The packages that the shell is for.
                   packages = p: [
-                    # self.package.${system}.default
+                    # self.packages.${system}.default
                   ];
 
                   buildInputs = with (haskellPackages system);
