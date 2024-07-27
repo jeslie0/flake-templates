@@ -18,8 +18,11 @@
           inherit system;
         });
 
+      ghcVersion =
+        "ghc965";
+
       haskellPackages = system:
-        nixpkgsFor.${system}.haskellPackages;
+        nixpkgsFor.${system}.haskell.packages.${ghcVersion};
 
       packageName = system: with builtins;
         let
@@ -43,9 +46,18 @@
                   nixpkgsFor.${system};
               in
                 {
+                  nixpkgs =
+                    pkgs;
+
                   default =
                     (haskellPackages system).callCabal2nix (packageName system) self {};
-                }
+                } // (
+                import ./nix/packages.nix {
+                  inherit pkgs;
+
+                  packageName =
+                    packageName system;
+                })
             );
 
 
