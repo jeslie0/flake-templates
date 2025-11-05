@@ -72,6 +72,12 @@
         path = ./Python;
         description = "A very basic Python project, with a devshell.";
       };
+
+      rust = {
+        path = ./rust;
+        description = (import ./rust/flake.nix).description;
+
+      };
     };
   };
 }
