@@ -45,7 +45,7 @@
 
       haskell = {
         path = ./Haskell/Haskell;
-        description = "Flake template for a general Haskell and Cabal project.";
+        description = (import ./Haskell/Haskell/flake.nix).description;
       };
 
       haskell2flake = {

@@ -1,89 +1,78 @@
 {
-  description = "My Haskell project";
+  description = "A haskell project built on haskell.nix, providing a dev shell";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    haskell-nix = { url = "github:input-output-hk/haskell.nix"; };
   };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, haskell-nix }:
     let
       supportedSystems =
         [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
-      forAllSystems =
-        nixpkgs.lib.genAttrs supportedSystems;
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       nixpkgsFor = forAllSystems (system:
         import nixpkgs {
           inherit system;
+          # Might want to use an overlay but this can cause ghc to be rebuilt.
+          # overlays = [ haskell-nix.overlay ];
         });
 
-      ghcVersion =
-        "ghc965";
+      ghcVersion = "ghc9122";
 
-      haskellPackages = system:
-        nixpkgsFor.${system}.haskell.packages.${ghcVersion};
+      project = forAllSystems (system:
+        haskell-nix.legacyPackages.${system}.haskell-nix.project' {
+          compiler-nix-name = ghcVersion;
+          src = ./.;
+          modules = [ ];
+        });
 
-      packageName = system: with builtins;
+      flake = system: project.${system}.flake { };
+
+    in {
+      overlays = { };
+
+      checks = forAllSystems (system: let pkgs = nixpkgsFor.${system}; in { });
+
+      packages = forAllSystems (system:
         let
-          cabalFileName =
-            let
-              cabalFiles =
-                ((filter ((nixpkgsFor.${system}).lib.hasSuffix ".cabal")) (attrNames (readDir ./.)));
-            in
-              head cabalFiles;
+          pkgs = nixpkgsFor.${system};
 
-          matches =
-            (match "^.*name\:\ *([^[:space:]]*).*$" (readFile "${./.}\/${cabalFileName}"));
-        in
-          head matches;
-      in
-        {
-          packages =
-            forAllSystems (system:
-              let
-                pkgs =
-                  nixpkgsFor.${system};
-              in
-                {
-                  nixpkgs =
-                    pkgs;
+          flakePkgs = (flake system).packages;
+        in {
+          default = pkgs.hello;
+        }
+        #// (flakePkgs system)
+      );
 
-                  default =
-                    (haskellPackages system).callCabal2nix (packageName system) self {};
-                } // (
-                import ./nix/packages.nix {
-                  inherit pkgs;
+      devShell = forAllSystems (system:
+        let
+          initShell = nixpkgsFor.${system}.mkShell {
+            packages =
+              [ nixpkgsFor.${system}.cabal-install nixpkgsFor.${system}.ghc ];
+          };
 
-                  packageName =
-                    packageName system;
-                })
-            );
+          hls-wrapper = nixpkgsFor.${system}.writeScriptBin
+            "haskell-language-server-wrapper" ''
+              #!${nixpkgsFor.${system}.stdenv.shell}
+              ${
+                haskell-nix.legacyPackages.${system}.haskell-nix.tool ghcVersion
+                "haskell-language-server" "latest"
+              }/bin/haskell-language-server "$@"
+            '';
 
-
-          devShell =
-            forAllSystems (system:
-              let
-                pkgs =
-                  nixpkgsFor.${system};
-              in
-                (haskellPackages system).shellFor {
-                  # The packages that the shell is for.
-                  packages = p: [
-                    # self.packages.${system}.default
-                  ];
-
-                  buildInputs = with (haskellPackages system);
-                    [ haskell-language-server
-                      cabal-install
-                    ];
-
-                  # Add build inputs of the following derivations.
-                  inputsFrom = [ ];
-
-                  # Enables Hoogle for the builtin packages.
-                  # withHoogle = true;
-                }
-            );
-        };
+          projectShell = project.${system}.shellFor {
+            withHoogle = true;
+            inputsFrom = [ ];
+            buildInputs = [ hls-wrapper ];
+            tools = {
+              haskell-language-server = { };
+              cabal = { };
+            };
+          };
+        in initShell);
+    };
 }
