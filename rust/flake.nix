@@ -56,6 +56,7 @@
                 pkgs.cargo
                 pkgs.rustc
                 pkgs.rust-analyzer
+                pkgs.rustfmt
               ]; # Extra packages to go in the shell
             }
         );
