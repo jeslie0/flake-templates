@@ -20,7 +20,7 @@
           overlays = [ ];
         });
 
-      cargoFile = builtins.fromTOML "./Cargo.toml";
+      cargoFile = builtins.fromTOML (builtins.readFile "${self}/Cargo.toml");
     in
       {
         overlays = {};
@@ -48,7 +48,9 @@
           let pkgs = nixpkgsFor.${system};
           in
             pkgs.mkShell {
-              inputsFrom = [ ]; # Include build inputs from packages in
+              inputsFrom = [
+                # self.outputs.packages.${system}.default
+              ]; # Include build inputs from packages in
               # this list
               packages = [
                 pkgs.cargo
