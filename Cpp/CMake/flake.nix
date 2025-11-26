@@ -2,48 +2,76 @@
   description = "A very basic C++ flake template, using CMake, providing a devshell.";
 
   inputs = {
-    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
-    flake-utils.url = github:numtide/flake-utils;
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-          dependencies = with pkgs;
-            [ cmake ]; # Input the build dependencies here
-          packageName = with builtins; head (match "^.*PROJECT\\(([^\ ]+).*$" (readFile ./CMakeLists.txt));
-          version' = with builtins; head (match "^.*PROJECT\\(${packageName}.*VERSION\ ([^\)]+).*$" (readFile ./CMakeLists.txt));
-      in
-        {
-          packages.${packageName} = pkgs.stdenv.mkDerivation rec {
-            pname = packageName;
-            version = version';
-            src = ./.;
-            dontUseCmakeConfigure=true;
-            buildInputs = dependencies;
-            buildPhase = ''
-                         cmake . -B build -DUSE_LOCAL_PACKAGES=true;
-                         cd build;
+  outputs = { self, nixpkgs }:
+    let
+      supportedSystems =
+        [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
+
+      forAllSystems =
+        nixpkgs.lib.genAttrs supportedSystems;
+
+      nixpkgsFor = forAllSystems (system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ ];
+        });
+
+      rootCMakeFile =
+        builtins.readFile ./CMakeLists.txt;
+
+      pname = with builtins;
+        head (match "^.*project\\([[:space:]]*([A-Za-z0-9_]+).*$" rootCMakeFile);
+
+      version = with builtins;
+        head (match "^.*[[:space:]]+VERSION[[:space:]]+([0-9_\.]+).*$" rootCMakeFile);
+    in
+      {
+        overlays = {};
+
+        checks = forAllSystems (system:
+          let pkgs = nixpkgsFor.${system};
+          in
+            {}
+        );
+
+        packages = forAllSystems (system:
+          let pkgs = nixpkgsFor.${system};
+          in
+            {
+              default = pkgs.stdenv.mkDerivation {
+                inherit pname version;
+                src = ./.;
+                # dontUseCmakeConfigure=true;
+                buildInputs = [
+                  pkgs.cmake
+                ];
+                buildPhase = ''
                          make
                          '';
-            installPhase = ''
+                installPhase = ''
                          mkdir -p $out/bin
-                         cd src
-                         cp ${packageName} $out/bin
+                         cp ${pname} $out/bin
                          '';
-          };
+              };
+            });
 
-          defaultPackage = self.packages.${system}.${packageName};
-
-          devShell = pkgs.mkShell {
-            inputsFrom = [ self.packages.${system}.${packageName}
-                         ];
-            packages = with pkgs;
-              [ clang-tools
-                cmake
-              ];
-          };
-        }
-    );
+        devShell = forAllSystems (system:
+          let pkgs = nixpkgsFor.${system};
+          in
+            pkgs.mkShell {
+              inputsFrom = [
+                self.outputs.packages.${system}.default
+              ]; # Include build inputs from packages in
+              # this list
+              packages = [
+                pkgs.clang-tools
+                pkgs.clang
+                pkgs.cmake-language-server
+              ]; # Extra packages to go in the shell
+            }
+        );
+      };
 }
