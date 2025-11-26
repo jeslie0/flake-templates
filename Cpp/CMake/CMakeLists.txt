@@ -1,19 +1,13 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
+cmake_minimum_required(VERSION 3.11)
 
-PROJECT(PROJECT_NAME LANGUAGES CXX VERSION 0.1.0)
+project(PROJECT_NAME
+  LANGUAGES CXX
+  VERSION 0.1.0
+)
 
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(CMAKE_CXX_STANDARD 23)
-SET(CMAKE_CXX_FLAGS "-O3")
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(USE_LOCAL_PACKAGES)
-  # find_package( REQUIRED)
-else()
-  # include(FetchContent)
-  # FetchContent_Declare()
-  # FetchContent_MakeAvailable()
-
-endif(USE_LOCAL_PACKAGES)
-
-ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(lib)
+add_executable(${PROJECT_NAME}
+  src/main.cpp
+)
