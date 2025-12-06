@@ -76,7 +76,11 @@
       rust = {
         path = ./rust;
         description = (import ./rust/flake.nix).description;
+      };
 
+      typst = {
+        path = ./typst;
+        description = (import ./typst/flake.nix).description;
       };
     };
   };

@@ -1,0 +1,4 @@
+/.direnv/
+*.pdf
+src/auto
+/result
